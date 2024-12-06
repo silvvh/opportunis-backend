@@ -1,5 +1,8 @@
 package com.bcc.projeto.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.bcc.projeto.entities.Administrator;
 import org.springframework.data.domain.Pageable;
 import com.bcc.projeto.exceptions.*;
@@ -11,6 +14,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import com.bcc.projeto.entities.Administrator;
+import com.bcc.projeto.exceptions.DatabaseException;
+import com.bcc.projeto.exceptions.ResourceNotFoundException;
+import com.bcc.projeto.repositories.AdmRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service

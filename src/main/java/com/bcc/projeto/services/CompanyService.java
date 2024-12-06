@@ -1,5 +1,8 @@
 package com.bcc.projeto.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.bcc.projeto.dtos.CompanyDTO;
 import com.bcc.projeto.dtos.ResponseDTO;
 import com.bcc.projeto.entities.*;
@@ -18,6 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.bcc.projeto.entities.Company;
+import com.bcc.projeto.exceptions.DatabaseException;
+import com.bcc.projeto.exceptions.ResourceNotFoundException;
+import com.bcc.projeto.repositories.CompanyRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
