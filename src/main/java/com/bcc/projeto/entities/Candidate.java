@@ -1,11 +1,12 @@
 package com.bcc.projeto.entities;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -26,7 +27,9 @@ public class Candidate extends User {
 	private String cpf;
 
 	private char genre;
-	private Date birthDate;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate birthDate;
 
 	@OneToMany(mappedBy = "id.candidate")
 	private final List<Candidature> candidatures = new ArrayList<>();
@@ -39,8 +42,7 @@ public class Candidate extends User {
 
 	public Candidate() {}
 
-	public Candidate(Long id, String name, String email, String telephone, String password, String cpf, char genre,
-			Date birthDate) {
+	public Candidate(Long id, String name, String email, String telephone, String password, String cpf, char genre, LocalDate birthDate) {
 		super(id, name, email, telephone, password);
 		this.cpf = cpf;
 		this.genre = genre;
@@ -63,11 +65,11 @@ public class Candidate extends User {
 		this.genre = genre;
 	}
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 
