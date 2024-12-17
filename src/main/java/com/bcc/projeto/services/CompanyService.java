@@ -51,6 +51,14 @@ public class CompanyService {
 
     @Transactional
     public void insert(CompanyDTO companyDTO, String encryptedPassword) {
+        if (repository.findByEmailEquals(companyDTO.email()).isPresent()) {
+            throw new EmailAlreadyInUseException("Email já está em uso: " + companyDTO.email());
+        }
+
+        if (repository.findBycnpjEquals(companyDTO.cnpj()).isPresent()) {
+            throw new CNPJAlreadyInUseException("CNPJ já está em uso: " + companyDTO.cnpj());
+        }
+
         Company company = new Company();
         company.setName(companyDTO.name());
         company.setEmail(companyDTO.email());
@@ -59,16 +67,6 @@ public class CompanyService {
         company.setTelephone(companyDTO.telephone());
         company.setRole(Roles.ENTERPRISE);
         company.setCompanySector(companyDTO.category());
-
-        Optional<Company> existingByEmail = repository.findByEmailEquals(company.getEmail());
-        if (existingByEmail.isPresent()) {
-            throw new EmailAlreadyInUseException("Email já está em uso: " + company.getEmail());
-        }
-
-        Optional<Company> existingByCnpj = repository.findBycnpjEquals(company.getCnpj());
-        if (existingByCnpj.isPresent()) {
-            throw new CNPJAlreadyInUseException("CNPJ já está em uso: " + company.getCnpj());
-        }
         repository.save(company);
     }
 

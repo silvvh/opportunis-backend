@@ -4,6 +4,8 @@ package com.bcc.projeto.controller;
 import com.bcc.projeto.entities.Category;
 import com.bcc.projeto.entities.Company;
 import com.bcc.projeto.entities.enums.Roles;
+import com.bcc.projeto.exceptions.CNPJAlreadyInUseException;
+import com.bcc.projeto.exceptions.EmailAlreadyInUseException;
 import com.bcc.projeto.services.CategoryService;
 import com.bcc.projeto.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -69,11 +72,15 @@ public class CompanyController {
         }
     }
     @PostMapping
-    public ResponseEntity<Company> insert(@RequestBody Company obj) {
-        obj.setRole(Roles.ENTERPRISE);
-        obj = service.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<?> insert(@RequestBody Company obj) {
+        try {
+            obj.setRole(Roles.ENTERPRISE);
+            obj = service.insert(obj);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+            return ResponseEntity.created(uri).body(obj);
+        } catch (EmailAlreadyInUseException | CNPJAlreadyInUseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
     @DeleteMapping(value = "/{id}")
     public  ResponseEntity<Void> delete(@PathVariable Long id){

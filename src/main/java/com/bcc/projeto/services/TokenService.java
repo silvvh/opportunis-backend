@@ -23,7 +23,6 @@ public class TokenService {
                     .withIssuer("opportunis")
                     .withSubject(user.getEmail())
                     .withClaim("role", user.getRole().toString())
-                    .withClaim("id", user.getId().toString())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
             return token;

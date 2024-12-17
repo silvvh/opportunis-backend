@@ -82,7 +82,6 @@ public abstract class User implements Serializable, UserDetails {
 	public User() {}
 	
 	public User(Long id, String name, String email, String telephone, String password) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;

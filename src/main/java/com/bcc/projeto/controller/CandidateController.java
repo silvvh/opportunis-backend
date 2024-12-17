@@ -2,11 +2,15 @@ package com.bcc.projeto.controller;
 
 import java.net.URI;
 
+import com.bcc.projeto.exceptions.CPFAlreadyInUseException;
+import com.bcc.projeto.exceptions.EmailAlreadyInUseException;
+import com.bcc.projeto.exceptions.TelephoneAlreadyInUseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,11 +60,13 @@ public class CandidateController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Candidate> insert(@RequestBody Candidate obj) {
-		obj.setRole(Roles.CANDIDATE);
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	public ResponseEntity<?> insert(@RequestBody Candidate candidate) {
+		try {
+			Candidate savedCandidate = service.insert(candidate);
+			return ResponseEntity.status(HttpStatus.CREATED).body(savedCandidate);
+		} catch (EmailAlreadyInUseException | CPFAlreadyInUseException | TelephoneAlreadyInUseException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 
 	@DeleteMapping(value = "/{id}")

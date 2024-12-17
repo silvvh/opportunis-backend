@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -28,7 +29,6 @@ public class Company extends User {
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	@JsonBackReference
 	private Category category;
 
 	@OneToMany(mappedBy = "company")
@@ -107,6 +107,14 @@ public class Company extends User {
 		return vacancies;
 	}
 
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	
+	@JsonIgnore
+	public Category getCategory() {
+		return category;
+	}
 
 	@Override
 	public int hashCode() {
